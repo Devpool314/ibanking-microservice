@@ -1,9 +1,6 @@
 package com.tuition.account_service;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -26,4 +23,24 @@ public class AccountController {
     public ResponseEntity<List<Transaction>> getHistory(@PathVariable Long userId) {
         return ResponseEntity.ok(accountService.getHistory(userId));
     }
+
+    @PostMapping("/debit")
+    public ResponseEntity<Account> debit(@RequestBody DebitRequest debitRequest) {
+        Account updatedAccount = accountService.debitAccount(
+            debitRequest.getUserId(), 
+            debitRequest.getAmount()
+        );
+        return ResponseEntity.ok(updatedAccount);
+    }
+}
+
+class DebitRequest {
+    private Long userId;
+    private Double amount;
+
+    // Thêm getters & setters
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+    public Double getAmount() { return amount; }
+    public void setAmount(Double amount) { this.amount = amount; }
 }
